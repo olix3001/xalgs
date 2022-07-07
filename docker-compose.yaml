@@ -1,0 +1,40 @@
+version: "3.9" # optional since v1.27.0
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    restart: always
+    container_name: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    #volumes:
+    #  - ~/.xalgs/rabbitmq/data/:/var/lib/rabbitmq/
+    #  - ~/.xalgs/rabbitmq/log/:/var/log/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_PASS=${MQTT_PASS}
+      - RABBITMQ_DEFAULT_USER=${MQTT_USER}
+
+  db:
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db-init.sql:/docker-entrypoint-initdb.d/db-init.sql
+    # - db:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: franopusz2006@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    # volumes:
+    #  - pgadmin-data:/var/lib/pgadmin

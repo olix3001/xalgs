@@ -1,0 +1,10 @@
+# main
+.env
+
+# api
+api/node_modules
+api/.env
+api/dist
+
+# worker
+worker/target

@@ -1,0 +1,54 @@
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import * as amqp from 'amqplib/callback_api';
+
+@Injectable()
+export class TaskQueueService implements OnModuleInit, OnModuleDestroy {
+  private channel;
+  private connection;
+
+  onModuleInit(): void {
+    // create new MQTT queue
+    amqp.connect(
+      `amqp://${process.env.MQTT_USER}:${process.env.MQTT_PASS}@${process.env.MQTT_HOST}:${process.env.MQTT_PORT}/`,
+      (error0, connection) => {
+        if (error0) {
+          throw error0;
+        }
+
+        this.connection = connection;
+
+        // create communication channel
+        connection.createChannel((error1, channel) => {
+          if (error1) {
+            throw error1;
+          }
+
+          this.channel = channel;
+        });
+      },
+    );
+  }
+
+  onModuleDestroy(): void {
+    this.connection.close();
+  }
+
+  //registerQueues() {}
+
+  submitTask(taskId: number, sourceCode: string): boolean {
+    try {
+      this.channel.sendToQueue(
+        'task_submission',
+        Buffer.from(
+          JSON.stringify({
+            taskId,
+            sourceCode,
+          }),
+        ),
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+}
