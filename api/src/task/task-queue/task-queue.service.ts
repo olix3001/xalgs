@@ -1,6 +1,8 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import * as amqp from 'amqplib/callback_api';
 
+const QUEUE_NAME = 'task_submission';
+
 @Injectable()
 export class TaskQueueService implements OnModuleInit, OnModuleDestroy {
   private channel;
@@ -23,6 +25,10 @@ export class TaskQueueService implements OnModuleInit, OnModuleDestroy {
             throw error1;
           }
 
+          channel.assertQueue(QUEUE_NAME, {
+            durable: false,
+          });
+
           this.channel = channel;
         });
       },
@@ -38,7 +44,7 @@ export class TaskQueueService implements OnModuleInit, OnModuleDestroy {
   submitTask(taskId: number, sourceCode: string): boolean {
     try {
       this.channel.sendToQueue(
-        'task_submission',
+        QUEUE_NAME,
         Buffer.from(
           JSON.stringify({
             taskId,
