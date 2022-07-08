@@ -4,7 +4,9 @@
 model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
-  name  String?
+  pass String
+  salt String
+  username  String @unique
 }
 
 generator client {
