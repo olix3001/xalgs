@@ -6,5 +6,10 @@ api/node_modules
 api/.env
 api/dist
 
+# frontend
+frontend/node_modules
+frontend/.env
+frontend/.next
+
 # worker
 worker/target
