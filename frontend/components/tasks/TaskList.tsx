@@ -11,6 +11,7 @@ import {
   Button,
 } from "@mantine/core";
 import { Selector, ChevronDown, ChevronUp, Search } from "tabler-icons-react";
+import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
   th: {
@@ -132,9 +133,11 @@ export function TaskList({ data }: TableSortProps) {
     <tr key={row.id}>
       <td>{row.id}</td>
       <td>
-        <Button component="a" variant="subtle">
-          {row.name}
-        </Button>
+        <Link href={`/problem/${row.id}`} passHref>
+          <Button component="a" variant="subtle">
+            {row.name}
+          </Button>
+        </Link>
       </td>
       <td>{row.difficulty}</td>
       <td>{row.stars}</td>
