@@ -4,11 +4,12 @@ import axios from "axios";
 import { Head } from "next/document";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Notebook } from "tabler-icons-react";
+import { Notebook, Send } from "tabler-icons-react";
 import constants from "../../../app/constants";
 
 import "katex/dist/katex.min.css";
 import Latex from "react-latex-next";
+import { Stat } from "../../../components/task/Stat";
 
 export default function Problem() {
   const router = useRouter();
@@ -17,6 +18,8 @@ export default function Problem() {
   const [data, setData] = useState({
     name: "Loading...",
     message: "Loading...",
+    memLimit: "-1",
+    timeLimit: "-1",
   });
 
   const loadData = async () => {
@@ -46,10 +49,24 @@ export default function Problem() {
       <h2 style={{ padding: 0, margin: 0 }}>{data.name}</h2>
       <Tabs>
         <Tabs.Tab label="View" icon={<Notebook size={14} />}>
-          <Paper withBorder p="md">
+          <Stat
+            data={[
+              {
+                label: "MEMORY LIMIT",
+                stats: `${data.memLimit}kb`,
+              },
+              {
+                label: "TIME LIMIT",
+                stats: `${data.timeLimit}s`,
+              },
+            ]}
+          />
+          <Paper withBorder p="md" mt="sm">
             <Latex>{data.message}</Latex>
           </Paper>
         </Tabs.Tab>
+
+        <Tabs.Tab label="Submit" icon={<Send size={14} />}></Tabs.Tab>
       </Tabs>
     </>
   );

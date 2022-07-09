@@ -14,6 +14,7 @@ interface StatsRingProps {
     label: string;
     stats: string;
   }[];
+  cols?: number;
 }
 
 const icons = {
@@ -21,12 +22,19 @@ const icons = {
   down: ArrowDownRight,
 };
 
-export function Stat({ data }: StatsRingProps) {
+export function Stat({ data, cols }: StatsRingProps) {
   const stats = data.map((stat) => {
     return (
       <Paper withBorder radius="md" p="xs" key={stat.label}>
-        <Group>
-          <div>
+        <Group position="center" grow>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
             <Text color="dimmed" size="xs" transform="uppercase" weight={700}>
               {stat.label}
             </Text>
@@ -39,7 +47,7 @@ export function Stat({ data }: StatsRingProps) {
     );
   });
   return (
-    <SimpleGrid cols={3} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
+    <SimpleGrid cols={cols || 2} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
       {stats}
     </SimpleGrid>
   );

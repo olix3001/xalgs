@@ -41,14 +41,14 @@ export class TaskQueueService implements OnModuleInit, OnModuleDestroy {
 
   //registerQueues() {}
 
-  submitTask(taskId: number, sourceCode: string): boolean {
+  submitTask(taskId: number, submissionId: number): boolean {
     try {
       this.channel.sendToQueue(
         QUEUE_NAME,
         Buffer.from(
           JSON.stringify({
             taskId,
-            sourceCode,
+            submissionId,
           }),
         ),
       );

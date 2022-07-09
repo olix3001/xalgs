@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -60,13 +61,45 @@ export class TaskController {
 
   @UseGuards(JwtAuthGuard)
   @Post(':id/submit')
-  submit(@Body('sourceCode') sourceCode: string, @Param('id') taskId): string {
-    if (isNaN(taskId) || sourceCode == undefined || sourceCode.length == 0)
+  async submit(
+    @Request() req,
+    @Body('sourceCode') sourceCode: string,
+    @Body('lang') lang: string,
+    @Param('id') taskId,
+  ) {
+    if (
+      isNaN(taskId) ||
+      sourceCode == undefined ||
+      sourceCode.length == 0 ||
+      lang == undefined
+    )
       throw new BadRequestException(
         'Expected taskId to be a number and sourceCode to be a string',
       );
-    this.taskQueue.submitTask(parseInt(taskId), sourceCode);
 
-    return 'Task sucesfully submited';
+    const subm = await this.prismaService.submission
+      .create({
+        data: {
+          code: sourceCode,
+          lang: lang,
+          task: {
+            connect: {
+              id: parseInt(taskId),
+            },
+          },
+          author: {
+            connect: {
+              id: parseInt(req.user.userId),
+            },
+          },
+        },
+      })
+      .catch((e) => {
+        throw new BadRequestException('Something is not yes');
+      });
+
+    this.taskQueue.submitTask(parseInt(taskId), subm.id);
+
+    return { submissionId: subm.id };
   }
 }

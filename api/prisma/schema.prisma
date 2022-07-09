@@ -34,7 +34,6 @@ model Task {
 
 model Submission {
   id          Int      @id @default(autoincrement())
-  name        String
   submittedAt DateTime @default(now())
 
   task   Task @relation(fields: [taskId], references: [id])
