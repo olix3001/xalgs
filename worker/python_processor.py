@@ -4,7 +4,8 @@ import shutil
 from language_processor import LanguageProcessor
 
 class PythonProcessor(LanguageProcessor):
-    def process(self, submissionId: int, testCount: int, timeLimit: int, idmap: dict) -> None:
+    def process(self, submissionId: int, testCount: int, timeLimit: int, idmap: dict) -> bool:
+        isFullSuccess = True
         for ti in range(testCount):
             testId = str(submissionId) + "-" + str(ti)
             datadir = f'./{str(submissionId)}-data'
@@ -28,6 +29,8 @@ class PythonProcessor(LanguageProcessor):
             if exec_time >= timeLimit*1000:
                 print(f'   > test {str(ti)} timeout after {exec_time}ms')
                 self.add_result(submissionId, idmap[ti], False, exec_time, 0, "TIMEOUT")
+                isFullSuccess = False
+                os.remove(f'./test-{testId}.o')
                 continue
 
             if self.compare(f'./test-{testId}.o', f'{datadir}/test-{str(ti)}.eo'):
@@ -36,3 +39,8 @@ class PythonProcessor(LanguageProcessor):
             else:
                 print(f'   > test {str(ti)} failed after {exec_time}ms')
                 self.add_result(submissionId, idmap[ti], False, exec_time, 0, "WRONG ANSWER")
+                isFullSuccess = False
+
+            os.remove(f'./test-{testId}.o')
+
+        return isFullSuccess

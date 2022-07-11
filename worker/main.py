@@ -1,4 +1,6 @@
 import math
+import shutil
+from this import s
 import pika
 import json
 import psycopg2
@@ -58,6 +60,12 @@ def fetch_tests(id, datadir):
         i += 1
     return (len(d), idmap)
 
+def set_tested(submissionId, success):
+    cursor = conn.cursor()
+    cursor.execute(f'UPDATE "Submission" SET "isSuccess" = {"TRUE" if success else "FALSE"}, "isTested" = TRUE WHERE id={str(submissionId)}')
+    conn.commit()
+    cursor.close()
+
 # ----< LANGUAGE DEFINITIONS >---- #
 LANGS = {
     'Python': PythonProcessor(add_result)
@@ -82,9 +90,15 @@ def callback(ch, method, properties, body):
 
     (tc, idmap) = fetch_tests(int(submission['taskid']), datadir)
     
-    LANGS[submission['lang']].process(int(data['submissionId']), tc, timeLimit, idmap)
+    if not submission['lang'] in LANGS:
+        print(" > Could not find language")
+        return
+    fullTestResult = LANGS[submission['lang']].process(int(data['submissionId']), tc, timeLimit, idmap)
 
-    print(" > Code has been processed")
+    print(" > Code has been processed. Cleaning up")
+    shutil.rmtree(datadir)
+    set_tested(int(data['submissionId']), fullTestResult)
+    print(" > Waiting for next submission")
 
 
 channel.basic_qos(prefetch_count=1)

@@ -5,7 +5,7 @@ class LanguageProcessor:
     def __init__(self, add_result: Callable[[int, int, bool, int, int, Optional[str]], None]) -> None:
         self.add_result = add_result
 
-    def process(self, submissionId: int, testCount: int, timeLimit: int, idmap: dict) -> None:
+    def process(self, submissionId: int, testCount: int, timeLimit: int, idmap: dict) -> bool:
         pass
     
     def compare(self, baseline: str, newestFile: str) -> bool:
