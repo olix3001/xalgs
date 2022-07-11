@@ -9,6 +9,7 @@ import constants from "../../../app/constants";
 import "katex/dist/katex.min.css";
 import Latex from "react-latex-next";
 import { Stat } from "../../../components/task/Stat";
+import SubmitSolution from "../../../components/task/SubmitSolution";
 
 export default function Problem() {
   const router = useRouter();
@@ -35,7 +36,6 @@ export default function Problem() {
 
     if (r) {
       setData(r.data);
-      console.log(r.data);
     }
   };
 
@@ -65,7 +65,9 @@ export default function Problem() {
           </Paper>
         </Tabs.Tab>
 
-        <Tabs.Tab label="Submit" icon={<Send size={14} />}></Tabs.Tab>
+        <Tabs.Tab label="Submit" icon={<Send size={14} />}>
+          <SubmitSolution pid={pid} />
+        </Tabs.Tab>
       </Tabs>
     </>
   );

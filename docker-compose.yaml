@@ -60,6 +60,9 @@ services:
       context: ./api/
       dockerfile: Dockerfile
     image: xalgs/api-latest
+    environment:
+      - DATABASE_URL="postgresql://admin:admin123@localhost:5432/xalgs?schema=public"
+      - MQTT_HOST=rabbitmq
     ports:
       - 3000:3000
     links:

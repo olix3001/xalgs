@@ -1,60 +1,11 @@
-import datetime
 import math
-import shutil
 import pika
 import json
 import psycopg2
 from dotenv import load_dotenv
 import os
 
-def compare(baseline, newestFile):
-    af = open(baseline)
-    bf = open(newestFile)
-
-    lines1 = list(map(lambda e: e.replace('\n', ''), af.readlines()))
-    lines2 = list(map(lambda e: e.replace('\n', ''), bf.readlines()))
-
-    af.close()
-    bf.close()
-    return lines1 == lines2
-
-def process_py(sid, tc, tl, idmap):
-    # for each test
-    for ti in range(tc):
-        tid = str(sid) + "-" + str(ti)
-        datadir = f'./{str(sid)}-data'
-        print(f'  > Running test {ti}')
-        # copy input
-        print(f'   > Copying test input and code')
-        os.mkdir(f'{tid}-files')
-        os.rename(f'{datadir}/test-{str(ti)}.i', f'./{tid}-files/test.i')
-
-        shutil.copyfile(f'{datadir}/code.f', f'./{tid}-files/code.py')
-        # run test
-        print(f'   > Running program')
-        os.system(f'sh ./createJail.sh {tid}')
-        starttime = datetime.datetime.now()
-        os.system(f'cd jail-submission-{tid} && timeout {str(tl)} python3 code.py < ./test.i > ./test.o')
-        endtime = datetime.datetime.now()
-        os.system(f'sh ./exitJail.sh {tid}')
-
-        exec_time = (endtime - starttime).total_seconds() * 1000
-        if exec_time >= tl*1000:
-            print(f'   > test {str(ti)} timeout after {exec_time}ms')
-            add_result(sid, idmap[ti], False, exec_time, 0, "TIMEOUT")
-            continue
-
-        if compare(f'./test-{tid}.o', f'{datadir}/test-{str(ti)}.eo'):
-            print(f'   > test {str(ti)} passed successfully in {exec_time}ms')
-            add_result(sid, idmap[ti], True, exec_time, 0)
-        else:
-            print(f'   > test {str(ti)} failed after {exec_time}ms')
-            add_result(sid, idmap[ti], False, exec_time, 0, "WRONG ANSWER")
-
-
-LANGS = {
-    'Python': process_py
-}
+from python_processor import PythonProcessor
 
 load_dotenv()
 credentials = pika.PlainCredentials(os.environ["MQTT_USER"], os.environ['MQTT_PASS'])
@@ -107,6 +58,12 @@ def fetch_tests(id, datadir):
         i += 1
     return (len(d), idmap)
 
+# ----< LANGUAGE DEFINITIONS >---- #
+LANGS = {
+    'Python': PythonProcessor(add_result)
+}
+# ----< LANGUAGE DEFINITIONS >---- #
+
 def callback(ch, method, properties, body):
     data = json.loads(body)
     timeLimit = int(data['timeLimit'])
@@ -125,7 +82,7 @@ def callback(ch, method, properties, body):
 
     (tc, idmap) = fetch_tests(int(submission['taskid']), datadir)
     
-    LANGS[submission['lang']](int(data['submissionId']), tc, timeLimit, idmap)
+    LANGS[submission['lang']].process(int(data['submissionId']), tc, timeLimit, idmap)
 
     print(" > Code has been processed")
 

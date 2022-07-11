@@ -1,6 +1,8 @@
 # main
 .env
 db/
+.DS_STORE
+**/.DS_STORE
 
 # api
 api/node_modules
