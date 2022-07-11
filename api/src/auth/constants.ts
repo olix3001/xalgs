@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
 
 export const jwtConstants = {
-  secret: randomUUID().toString(),
+  secret: 'devmode', //randomUUID().toString(),
 };

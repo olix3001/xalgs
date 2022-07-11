@@ -98,7 +98,17 @@ export class TaskController {
         throw new BadRequestException('Something is not yes');
       });
 
-    this.taskQueue.submitTask(parseInt(taskId), subm.id);
+    const task = await this.prismaService.task
+      .findFirst({
+        where: {
+          id: parseInt(taskId),
+        },
+      })
+      .catch((e) => {
+        throw new BadRequestException('Wrong task id');
+      });
+
+    this.taskQueue.submitTask(parseInt(taskId), subm.id, task.timeLimit);
 
     return { submissionId: subm.id };
   }

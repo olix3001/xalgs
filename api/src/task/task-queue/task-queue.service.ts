@@ -41,7 +41,7 @@ export class TaskQueueService implements OnModuleInit, OnModuleDestroy {
 
   //registerQueues() {}
 
-  submitTask(taskId: number, submissionId: number): boolean {
+  submitTask(taskId: number, submissionId: number, timeLimit: number): boolean {
     try {
       this.channel.sendToQueue(
         QUEUE_NAME,
@@ -49,6 +49,7 @@ export class TaskQueueService implements OnModuleInit, OnModuleDestroy {
           JSON.stringify({
             taskId,
             submissionId,
+            timeLimit,
           }),
         ),
       );

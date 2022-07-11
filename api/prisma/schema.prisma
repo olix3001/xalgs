@@ -56,7 +56,9 @@ model Test {
 
   isGenerator   Boolean @default(false)
   generatorLang String  @default("python")
+  generatorCode String @default("")
   content       String
+  expectedOut String @default("")
 
   task   Task @relation(fields: [taskId], references: [id])
   taskId Int

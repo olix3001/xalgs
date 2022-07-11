@@ -1,5 +1,4 @@
 # $1 - submission id
-# $2 - timeout
 
 #? create jail directory
 mkdir jail-submission-$1
@@ -11,7 +10,8 @@ mv ../$1-data ./data
 mkdir ./results
 
 #? execute jail command
-unshare -n -m "./program.sh"
+#unshare -n -m -Ur "./program.sh"
+sh ./program.sh $1
 
 #? check out
 # STATUS=$?

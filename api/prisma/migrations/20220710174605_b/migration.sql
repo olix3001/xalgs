@@ -15,7 +15,10 @@ CREATE TABLE "Task" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
     "message" TEXT NOT NULL,
+    "timeLimit" INTEGER NOT NULL,
+    "memLimit" INTEGER NOT NULL,
     "stars" INTEGER NOT NULL DEFAULT 0,
     "difficulty" INTEGER NOT NULL DEFAULT 1,
     "completions" INTEGER NOT NULL DEFAULT 0,
@@ -26,7 +29,6 @@ CREATE TABLE "Task" (
 -- CreateTable
 CREATE TABLE "Submission" (
     "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
     "submittedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "taskId" INTEGER NOT NULL,
     "code" TEXT NOT NULL,
@@ -44,7 +46,9 @@ CREATE TABLE "Test" (
     "id" SERIAL NOT NULL,
     "isGenerator" BOOLEAN NOT NULL DEFAULT false,
     "generatorLang" TEXT NOT NULL DEFAULT 'python',
+    "generatorCode" TEXT NOT NULL DEFAULT '',
     "content" TEXT NOT NULL,
+    "expectedOut" TEXT NOT NULL DEFAULT '',
     "taskId" INTEGER NOT NULL,
 
     CONSTRAINT "Test_pkey" PRIMARY KEY ("id")
