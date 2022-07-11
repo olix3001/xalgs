@@ -17,6 +17,7 @@ export class PdfService {
         'Test count',
         'Time limit',
         'Memory limit',
+        'Percentage',
       ],
       rows: [
         [
@@ -26,6 +27,11 @@ export class PdfService {
           submission.TestResults.length.toString(),
           `${submission.task.timeLimit}s`,
           `${submission.task.memLimit}kb`,
+          `${Math.floor(
+            (submission.TestResults.filter((e) => e.success).length /
+              submission.TestResults.length) *
+              100,
+          )}%`,
         ],
       ],
     };

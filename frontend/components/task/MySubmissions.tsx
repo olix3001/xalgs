@@ -223,6 +223,29 @@ export default function MySubmissions({ pid }: { pid?: string }) {
                                             : "UNKNOWN"}
                                     </Badge>
                                 </div>
+
+                                <div style={centerDiv}>
+                                    <Badge
+                                        color={
+                                            subm.isTested
+                                                ? subm.isSuccess
+                                                    ? "green"
+                                                    : "yellow"
+                                                : "yellow"
+                                        }
+                                        mx={6}
+                                    >
+                                        {subm.isTested
+                                            ? `${Math.floor(
+                                                  (subm.TestResults.filter(
+                                                      (e: any) => e.success
+                                                  ).length /
+                                                      subm.TestResults.length) *
+                                                      100
+                                              )}%`
+                                            : "UNKNOWN"}
+                                    </Badge>
+                                </div>
                             </div>
                         }
                         key={subm.id}

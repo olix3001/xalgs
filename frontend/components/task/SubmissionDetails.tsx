@@ -12,6 +12,8 @@ export default function SubmissionDetails({
                 return "yellow";
             case "WRONG ANSWER":
                 return "red";
+            case "COMPILATION ERROR":
+                return "red";
             default:
                 return "green";
         }
