@@ -94,6 +94,7 @@ function sortData(
 
   return filterData(
     [...data].sort((a, b) => {
+      if (payload.sortBy == null) return -1;
       if (payload.reversed) {
         return b[payload.sortBy].localeCompare(a[payload.sortBy]);
       }
@@ -129,7 +130,7 @@ export function TaskList({ data }: TableSortProps) {
     );
   };
 
-  const rows = sortedData.map((row) => (
+  const rows = sortedData.map((row: any) => (
     <tr key={row.id}>
       <td>{row.id}</td>
       <td>

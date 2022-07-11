@@ -9,5 +9,7 @@ RUN pnpm install --frozen-lockfile
 
 COPY . ./
 
-EXPOSE 3000
+RUN pnpm run build
+
+EXPOSE 8080
 ENTRYPOINT [ "pnpm", "start" ]

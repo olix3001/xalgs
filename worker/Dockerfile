@@ -12,4 +12,7 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+RUN set -ex && apk --no-cache add sudo
+USER root
+
 ENTRYPOINT ["python3", "main.py"]

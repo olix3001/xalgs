@@ -1,7 +1,6 @@
 import { Paper, Tabs, Text } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import axios from "axios";
-import { Head } from "next/document";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Notebook, Send } from "tabler-icons-react";
@@ -42,7 +41,7 @@ export default function Problem() {
 
   useEffect(() => {
     loadData();
-  }, [pid, router]);
+  }, [pid, router, loadData]);
 
   return (
     <>

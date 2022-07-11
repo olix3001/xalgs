@@ -7,6 +7,9 @@ services:
     expose:
       - 5672
       - 15672
+    ports:
+      - 5672:5672
+      - 15672:15672
     #volumes:
     #  - ~/.xalgs/rabbitmq/data/:/var/lib/rabbitmq/
     #  - ~/.xalgs/rabbitmq/log/:/var/log/rabbitmq
@@ -21,6 +24,8 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
       - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
     expose:
       - 5432
     volumes:
@@ -29,7 +34,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin4
+    container_name: pgadmin4_container
     restart: always
     ports:
       - "5050:80"
@@ -54,25 +59,25 @@ services:
       - rabbitmq
       - db
 
-  api:
-    restart: always
-    build:
-      context: ./api/
-      dockerfile: Dockerfile
-    image: xalgs/api-latest
-    ports:
-      - 3000:3000
-    links:
-      - rabbitmq
-      - db
+  # api:
+  #   restart: always
+  #   build:
+  #     context: ./api/
+  #     dockerfile: Dockerfile
+  #   image: xalgs/api-latest
+  #   ports:
+  #     - 3000:3000
+  #   links:
+  #     - rabbitmq
+  #     - db
 
-  frontend:
-    restart: always
-    build:
-      context: ./frontend/
-      dockerfile: Dockerfile
-    image: xalgs/frontend-latest
-    ports:
-      - 8080:8080
-    links:
-      - api
+  # frontend:
+  #   restart: always
+  #   build:
+  #     context: ./frontend/
+  #     dockerfile: Dockerfile
+  #   image: xalgs/frontend-latest
+  #   ports:
+  #     - 8080:8080
+  #   links:
+  #     - api

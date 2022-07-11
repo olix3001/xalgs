@@ -128,7 +128,7 @@ export function AppNavbar() {
         break;
       }
     }
-  }, [router]);
+  }, [router, data]);
 
   const links = data.map((item) => (
     <Link href={item.link} key={item.label}>

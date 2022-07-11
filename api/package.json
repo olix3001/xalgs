@@ -18,7 +18,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "start:full": "prisma migrate deploy && node dist/main"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -28,6 +29,7 @@
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "@prisma/client": "^4.0.0",
+    "amqplib": "^0.10.0",
     "crypto-js": "^4.1.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",

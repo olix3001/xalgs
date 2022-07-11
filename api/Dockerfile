@@ -7,10 +7,10 @@ COPY pnpm-lock.yaml .
 
 RUN pnpm install --frozen-lockfile
 
-RUN npx prisma generate
-RUN npx prisma migrate deploy
-
 COPY . ./
 
+RUN npx prisma generate
+RUN pnpm run build
+
 EXPOSE 3000
-ENTRYPOINT [ "pnpm", "start" ]
+ENTRYPOINT [ "pnpm", "start:full" ]
