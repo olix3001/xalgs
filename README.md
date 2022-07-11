@@ -19,6 +19,8 @@
 
 To setup this project on your pc, you need to have [Docker](https://docs.docker.com/) and [Docker compose](https://docs.docker.com/compose/) installed.
 
+You should also create .env files in api, worker and main project directories, you can use examples in `.env.example` files.
+
 Once you have docker, you need to build all the containers. To build them, you just need to run `docker compose build` command in the main project directory.
 
 Next, you can run your very own xalgs version using `docker compose up` command.
