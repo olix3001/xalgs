@@ -20,7 +20,7 @@ class PythonProcessor(LanguageProcessor):
             print(f'   > Running program')
             os.system(f'sh ./createJail.sh {testId}')
             starttime = datetime.datetime.now()
-            os.system(f'cd jail-submission-{testId} && timeout {str(timeLimit)} python3 code.py < ./test.i > ./test.o')
+            os.system(f'cd jail-submission-{testId} && su && unshare -m -n timeout {str(timeLimit)} python3 code.py < ./test.i > ./test.o')
             endtime = datetime.datetime.now()
             os.system(f'sh ./exitJail.sh {testId}')
 

@@ -1,15 +1,14 @@
 version: "3.9" # optional since v1.27.0
 services:
     rabbitmq:
-        image: rabbitmq:3-management-alpine
+        image: rabbitmq:3-alpine
         restart: always
         container_name: "rabbitmq"
         expose:
             - 5672
-            - 15672
-        #volumes:
-        #  - ~/.xalgs/rabbitmq/data/:/var/lib/rabbitmq/
-        #  - ~/.xalgs/rabbitmq/log/:/var/log/rabbitmq
+        volumes:
+            - ~/.xalgs/rabbitmq/data/:/var/lib/rabbitmq/
+            - ~/.xalgs/rabbitmq/log/:/var/log/rabbitmq
         environment:
             - RABBITMQ_DEFAULT_PASS=${MQTT_PASS}
             - RABBITMQ_DEFAULT_USER=${MQTT_USER}
@@ -43,6 +42,7 @@ services:
 
     worker:
         restart: always
+        privileged: true
         build:
             context: ./worker/
             dockerfile: Dockerfile
