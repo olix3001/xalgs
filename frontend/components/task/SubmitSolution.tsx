@@ -13,7 +13,7 @@ import {
     Textarea,
 } from "@mantine/core";
 
-export default function ({ pid }: { pid: string }) {
+export default function SubmitSolution({ pid }: { pid: string }) {
     const form = useForm({
         initialValues: {
             code: "",

@@ -59,7 +59,7 @@ export default function MySubmissions({ pid }: { pid?: string }) {
                             "Could not load your submissions, please try again later",
                     });
                 });
-    }, [pid]);
+    }, [pid, submissions.length]);
 
     const [isPdfGenerating, setPdfGenerating] = useState(false);
 
@@ -227,34 +227,36 @@ export default function MySubmissions({ pid }: { pid?: string }) {
                         }
                         key={subm.id}
                     >
-                        <Group grow>
-                            <Button
-                                variant="outline"
-                                leftIcon={<Code />}
-                                mb="md"
-                                onClick={() => {
-                                    if (subm.id != selectedSubmission) {
-                                        setSelectedSubmission(subm.id);
-                                        setCodeLoading(true);
-                                    }
-                                    setCodeOpened(true);
-                                }}
-                            >
-                                Show source code
-                            </Button>
-                            <Button
-                                variant="outline"
-                                leftIcon={<FileDownload />}
-                                mb="md"
-                                loading={isPdfGenerating}
-                                onClick={() => {
-                                    setPdfGenerating(true);
-                                    downloadSummary(subm.id);
-                                }}
-                            >
-                                Download results as pdf
-                            </Button>
-                        </Group>
+                        {subm.isTested && (
+                            <Group grow>
+                                <Button
+                                    variant="outline"
+                                    leftIcon={<Code />}
+                                    mb="md"
+                                    onClick={() => {
+                                        if (subm.id != selectedSubmission) {
+                                            setSelectedSubmission(subm.id);
+                                            setCodeLoading(true);
+                                        }
+                                        setCodeOpened(true);
+                                    }}
+                                >
+                                    Show source code
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    leftIcon={<FileDownload />}
+                                    mb="md"
+                                    loading={isPdfGenerating}
+                                    onClick={() => {
+                                        setPdfGenerating(true);
+                                        downloadSummary(subm.id);
+                                    }}
+                                >
+                                    Download results as pdf
+                                </Button>
+                            </Group>
+                        )}
                         {subm.isTested ? (
                             <SubmissionDetails
                                 tests={subm.TestResults}

@@ -1,81 +1,81 @@
 version: "3.9" # optional since v1.27.0
 services:
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    restart: always
-    container_name: "rabbitmq"
-    expose:
-      - 5672
-      - 15672
-    #volumes:
-    #  - ~/.xalgs/rabbitmq/data/:/var/lib/rabbitmq/
-    #  - ~/.xalgs/rabbitmq/log/:/var/log/rabbitmq
-    environment:
-      - RABBITMQ_DEFAULT_PASS=${MQTT_PASS}
-      - RABBITMQ_DEFAULT_USER=${MQTT_USER}
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+        restart: always
+        container_name: "rabbitmq"
+        expose:
+            - 5672
+            - 15672
+        #volumes:
+        #  - ~/.xalgs/rabbitmq/data/:/var/lib/rabbitmq/
+        #  - ~/.xalgs/rabbitmq/log/:/var/log/rabbitmq
+        environment:
+            - RABBITMQ_DEFAULT_PASS=${MQTT_PASS}
+            - RABBITMQ_DEFAULT_USER=${MQTT_USER}
 
-  db:
-    image: postgres:14-alpine
-    restart: always
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
-      - POSTGRES_DB=${DB_NAME}
-    expose:
-      - 5432
-    volumes:
-      - ./db-init.sql:/docker-entrypoint-initdb.d/db-init.sql
-      - ./db:/var/lib/postgresql/data
+    db:
+        image: postgres:14-alpine
+        restart: always
+        environment:
+            - POSTGRES_USER=${DB_USER}
+            - POSTGRES_PASSWORD=${DB_PASS}
+            - POSTGRES_DB=${DB_NAME}
+        expose:
+            - 5432
+        volumes:
+            - ./db-init.sql:/docker-entrypoint-initdb.d/db-init.sql
+            - ./db:/var/lib/postgresql/data
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin4
-    restart: always
-    ports:
-      - "5050:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@olix3001.xyz
-      PGADMIN_DEFAULT_PASSWORD: admin
-    links:
-      - db
-    # volumes:
-    #  - pgadmin-data:/var/lib/pgadmin
+    pgadmin:
+        image: dpage/pgadmin4
+        container_name: pgadmin4
+        restart: always
+        ports:
+            - "5050:80"
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@olix3001.xyz
+            PGADMIN_DEFAULT_PASSWORD: admin
+        links:
+            - db
+        # volumes:
+        #  - pgadmin-data:/var/lib/pgadmin
 
-  worker:
-    restart: always
-    build:
-      context: ./worker/
-      dockerfile: Dockerfile
-    environment:
-      - MQTT_HOST=rabbitmq
-      - DB_HOST=db
-    image: xalgs/worker-latest
-    links:
-      - rabbitmq
-      - db
+    worker:
+        restart: always
+        build:
+            context: ./worker/
+            dockerfile: Dockerfile
+        environment:
+            - MQTT_HOST=rabbitmq
+            - DB_HOST=db
+        image: xalgs/worker-latest
+        links:
+            - rabbitmq
+            - db
 
-  api:
-    restart: always
-    build:
-      context: ./api/
-      dockerfile: Dockerfile
-    image: xalgs/api-latest
-    environment:
-      - DATABASE_URL="postgresql://admin:admin123@localhost:5432/xalgs?schema=public"
-      - MQTT_HOST=rabbitmq
-    ports:
-      - 3000:3000
-    links:
-      - rabbitmq
-      - db
+    api:
+        restart: always
+        build:
+            context: ./api/
+            dockerfile: Dockerfile
+        image: xalgs/api-latest
+        environment:
+            - DATABASE_URL=postgresql://admin:admin123@db:5432/xalgs?schema=public
+            - MQTT_HOST=rabbitmq
+        ports:
+            - 3000:3000
+        links:
+            - rabbitmq
+            - db
 
-  frontend:
-    restart: always
-    build:
-      context: ./frontend/
-      dockerfile: Dockerfile
-    image: xalgs/frontend-latest
-    ports:
-      - 8080:8080
-    links:
-      - api
+    frontend:
+        restart: always
+        build:
+            context: ./frontend/
+            dockerfile: Dockerfile
+        image: xalgs/frontend-latest
+        ports:
+            - 8080:8080
+        links:
+            - api

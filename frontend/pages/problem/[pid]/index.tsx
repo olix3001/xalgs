@@ -47,7 +47,7 @@ export default function Problem() {
 
     useEffect(() => {
         if (data.name == defaultData.name) loadData();
-    }, [pid, router, loadData]);
+    }, [pid, router, loadData, data.name, defaultData.name]);
 
     const isLogged = useSelector((state: RootState) => state.login.isLogged);
 

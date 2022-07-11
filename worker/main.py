@@ -1,6 +1,5 @@
 import math
 import shutil
-from this import s
 import pika
 import json
 import psycopg2
