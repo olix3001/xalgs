@@ -1,14 +1,15 @@
 version: "3.9" # optional since v1.27.0
 services:
     rabbitmq:
-        image: rabbitmq:3-alpine
+        image: rabbitmq:3-management-alpine
         restart: always
         container_name: "rabbitmq"
-        expose:
-            - 5672
-        volumes:
-            - ~/.xalgs/rabbitmq/data/:/var/lib/rabbitmq/
-            - ~/.xalgs/rabbitmq/log/:/var/log/rabbitmq
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        #volumes:
+        #  - ~/.xalgs/rabbitmq/data/:/var/lib/rabbitmq/
+        #  - ~/.xalgs/rabbitmq/log/:/var/log/rabbitmq
         environment:
             - RABBITMQ_DEFAULT_PASS=${MQTT_PASS}
             - RABBITMQ_DEFAULT_USER=${MQTT_USER}
@@ -20,11 +21,11 @@ services:
             - POSTGRES_USER=${DB_USER}
             - POSTGRES_PASSWORD=${DB_PASS}
             - POSTGRES_DB=${DB_NAME}
-        expose:
-            - 5432
+        ports:
+            - "5432:5432"
         volumes:
             - ./db-init.sql:/docker-entrypoint-initdb.d/db-init.sql
-            - ./db:/var/lib/postgresql/data
+            - ./db-test:/var/lib/postgresql/data
 
     worker:
         restart: always

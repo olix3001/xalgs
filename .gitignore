@@ -1,8 +1,10 @@
 # main
 .env
 db/
+db-test/
 .DS_STORE
 **/.DS_STORE
+node_modules
 
 # api
 api/node_modules

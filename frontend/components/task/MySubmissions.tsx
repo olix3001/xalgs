@@ -16,7 +16,7 @@ import constants from "../../app/constants";
 import SubmissionDetails from "./SubmissionDetails";
 import { Prism } from "@mantine/prism";
 import { Language } from "prism-react-renderer";
-import { Code, FileDownload } from "tabler-icons-react";
+import { Code, FileDownload, Refresh } from "tabler-icons-react";
 
 export default function MySubmissions({ pid }: { pid?: string }) {
     const centerDiv = {
@@ -28,40 +28,43 @@ export default function MySubmissions({ pid }: { pid?: string }) {
 
     const [submissions, setSubmissions] = useState([]);
 
-    useEffect(() => {
-        if (submissions.length == 0)
-            axios
-                .get(
-                    `${constants.SERVER_URL}/submissions/my${
-                        pid ? "/" + pid : ""
-                    }`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem(
-                                "Authorization"
-                            )}`,
-                        },
-                    }
-                )
-                .then((r) => {
-                    setSubmissions(
-                        r.data.map((e: any) => {
-                            e.submittedAt = new Date(e.submittedAt);
-                            return e;
-                        })
-                    );
-                })
-                .catch(() => {
-                    showNotification({
-                        color: "red",
-                        title: "Error",
-                        message:
-                            "Could not load your submissions, please try again later",
-                    });
+    const loadSubmissions = () => {
+        axios
+            .get(
+                `${constants.SERVER_URL}/submissions/my${pid ? "/" + pid : ""}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "Authorization"
+                        )}`,
+                    },
+                }
+            )
+            .then((r) => {
+                setSubmissions(
+                    r.data.map((e: any) => {
+                        e.submittedAt = new Date(e.submittedAt);
+                        return e;
+                    })
+                );
+                setReloading(false);
+            })
+            .catch(() => {
+                showNotification({
+                    color: "red",
+                    title: "Error",
+                    message:
+                        "Could not load your submissions, please try again later",
                 });
-    }, [pid, submissions.length]);
+            });
+    };
+
+    useEffect(() => {
+        if (submissions.length == 0) loadSubmissions();
+    }, [pid, submissions.length, loadSubmissions]);
 
     const [isPdfGenerating, setPdfGenerating] = useState(false);
+    const [isReloading, setReloading] = useState(false);
 
     const downloadSummary = (sid: number) => {
         axios
@@ -150,6 +153,21 @@ export default function MySubmissions({ pid }: { pid?: string }) {
                     </Prism>
                 )}
             </Modal>
+            <Group position="right">
+                <Button
+                    variant="outline"
+                    mb="md"
+                    mt="sm"
+                    loading={isReloading}
+                    leftIcon={<Refresh />}
+                    onClick={() => {
+                        setReloading(true);
+                        loadSubmissions();
+                    }}
+                >
+                    Refresh
+                </Button>
+            </Group>
             <Accordion iconPosition="right">
                 {submissions.map((subm: any) => (
                     <Accordion.Item
