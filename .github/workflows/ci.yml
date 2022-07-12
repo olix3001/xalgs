@@ -23,7 +23,7 @@ jobs:
         run: docker compose -f docker-compose.test.yaml build
         
       - name: Start docker compose
-        run: docker compose -f docker-compose.test.yaml up -d
+        run: docker compose -f docker-compose.test.yaml up
         
       - name: Check docker
         run: docker compose -f docker-compose.test.yaml ps
