@@ -27,6 +27,7 @@ export default function MySubmissions({ pid }: { pid?: string }) {
     };
 
     const [submissions, setSubmissions] = useState([]);
+    const [loadedSubmissions, setLoaded] = useState(false);
 
     const loadSubmissions = () => {
         axios
@@ -48,6 +49,7 @@ export default function MySubmissions({ pid }: { pid?: string }) {
                     })
                 );
                 setReloading(false);
+                setLoaded(true);
             })
             .catch(() => {
                 showNotification({
@@ -60,8 +62,8 @@ export default function MySubmissions({ pid }: { pid?: string }) {
     };
 
     useEffect(() => {
-        if (submissions.length == 0) loadSubmissions();
-    }, [pid, submissions.length, loadSubmissions]);
+        if (!loadedSubmissions) loadSubmissions();
+    }, [pid, submissions.length, loadSubmissions, loadedSubmissions]);
 
     const [isPdfGenerating, setPdfGenerating] = useState(false);
     const [isReloading, setReloading] = useState(false);
@@ -137,6 +139,7 @@ export default function MySubmissions({ pid }: { pid?: string }) {
     const langMap: { [key: string]: Language } = {
         "": "cpp",
         Python: "python",
+        Cpp: "cpp",
     };
 
     return (

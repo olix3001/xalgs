@@ -10,6 +10,6 @@ cd jail-submission-$1
 #? execute jail command
 #sudo unshare -n -m "$2"
 
-mv ./test.o ../test-$1.o
+mv ./test.o ../test-$1.o || true
 cd ..
 rm -rf ./jail-submission-$1/

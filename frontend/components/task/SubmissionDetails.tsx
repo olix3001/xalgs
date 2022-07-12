@@ -12,6 +12,10 @@ export default function SubmissionDetails({
                 return "yellow";
             case "WRONG ANSWER":
                 return "red";
+            case "RUNTIME ERROR":
+                return "red";
+            case "COMPILATION TLE":
+                return "red";
             case "COMPILATION ERROR":
                 return "red";
             default:

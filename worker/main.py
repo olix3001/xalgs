@@ -67,7 +67,7 @@ def set_tested(submissionId, success):
 
 # ----< LANGUAGE DEFINITIONS >---- #
 LANGS = {
-    'Python': PythonProcessor(add_result)
+    'Python': PythonProcessor(add_result),
 }
 # ----< LANGUAGE DEFINITIONS >---- #
 

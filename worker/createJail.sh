@@ -3,7 +3,7 @@
 #? create jail directory
 mkdir jail-submission-$1
 cd jail-submission-$1
-mkdir -p bin lib64/x86_64-linux-gnu lib/x86_64-linux-gnu
+mkdir -p bin etc lib64/x86_64-linux-gnu lib/x86_64-linux-gnu
 
 mv ../$1-files/* ./
 

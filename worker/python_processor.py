@@ -20,7 +20,7 @@ class PythonProcessor(LanguageProcessor):
             print(f'   > Running program')
             os.system(f'sh ./createJail.sh {testId}')
             starttime = datetime.datetime.now()
-            os.system(f'cd jail-submission-{testId} && su && unshare -m -n timeout {str(timeLimit)} python3 code.py < ./test.i > ./test.o')
+            run_res = os.system(f'cd jail-submission-{testId} && su && timeout {str(timeLimit)} unshare -Umnr python3 code.py < ./test.i > ./test.o')
             endtime = datetime.datetime.now()
             os.system(f'sh ./exitJail.sh {testId}')
 
@@ -31,6 +31,12 @@ class PythonProcessor(LanguageProcessor):
                 self.add_result(submissionId, idmap[ti], False, exec_time, 0, "TIMEOUT")
                 isFullSuccess = False
                 os.remove(f'./test-{testId}.o')
+                continue
+
+            if run_res != 0:
+                print(f'   > test {str(ti)} runtime error after {exec_time}ms')
+                self.add_result(submissionId, idmap[ti], False, exec_time, 0, "RUNTIME ERROR")
+                isFullSuccess = False
                 continue
 
             if self.compare(f'./test-{testId}.o', f'{datadir}/test-{str(ti)}.eo'):

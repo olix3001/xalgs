@@ -83,8 +83,17 @@ describe("problem", () => {
     for (let lang of Object.keys(LANG_TESTS)) {
         const CODE = LANG_TESTS[lang];
         it("submit-" + lang, () => {
+            const SEMAIL = chance.email();
+            const SUSERNAME = chance.word({
+                length: chance.integer({ min: 6, max: 17 }),
+            });
+            const SPASS = chance.hash({
+                length: chance.integer({ min: 9, max: 29 }),
+            });
+            cy.visit("/register");
+            cy.register(SEMAIL, SUSERNAME, SPASS);
             cy.visit("/login");
-            cy.login(EMAIL, PASS);
+            cy.login(SEMAIL, SPASS);
             cy.visit("/problems");
 
             // click and wait to load
