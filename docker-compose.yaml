@@ -7,8 +7,8 @@ services:
         expose:
             - 5672
         volumes:
-            - ~/.xalgs/rabbitmq/data/:/var/lib/rabbitmq/
-            - ~/.xalgs/rabbitmq/log/:/var/log/rabbitmq
+            - ./.xalgs/rabbitmq/data/:/var/lib/rabbitmq/
+            - ./.xalgs/rabbitmq/log/:/var/log/rabbitmq
         environment:
             - RABBITMQ_DEFAULT_PASS=${MQTT_PASS}
             - RABBITMQ_DEFAULT_USER=${MQTT_USER}
@@ -24,7 +24,7 @@ services:
             - 5432
         volumes:
             - ./db-init.sql:/docker-entrypoint-initdb.d/db-init.sql
-            - ./db:/var/lib/postgresql/data
+            - ./.xalgs/db:/var/lib/postgresql/data
 
     worker:
         restart: always

@@ -5,6 +5,7 @@ db-test/
 .DS_STORE
 **/.DS_STORE
 node_modules
+.xalgs/
 
 # api
 api/node_modules
