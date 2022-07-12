@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 17.x
+
+      - name: Build containers
+        run: docker compose -f docker-compose.test.yaml build
+        
+      - name: Start docker compose
+        run: docker compose -f docker-compose.test.yaml up -d
+        
+      - name: Wait for api to be online
+        run: |
+          npm install wait-on
+          npx wait-on http://localhost:3000/
+          
+      - name: Setup test environment
+        run: |
+          cd api
+          npm install -D prisma
+          node init_tests.js
+          
+      - name: Cypress tests
+        uses: cypress-io/github-action@v2
+        with:
+          install: true
+
+      - name: Export videos
+        uses: actions/upload-artifact@v2
+        with:
+          name: ci-videos
+          path: cypress/videos
