@@ -1,6 +1,6 @@
 # xAlgs
 
-![shield](https://img.shields.io/github/repo-size/olix3001/xalgs) ![shield](https://img.shields.io/github/v/release/olix3001/xalgs?color=red&label=Latest%20version%3A) ![shield](https://img.shields.io/github/commits-since/olix3001/xalgs/latest) ![shield](https://img.shields.io/maintenance/yes/2022) ![shield](https://img.shields.io/badge/Supported%20platforms%3A%20-Windows%20%7C%20MacOS%20%7C%20Linux%20%7C%20Ubuntu-informational)
+![shield](https://img.shields.io/github/repo-size/olix3001/xalgs) ![shield](https://img.shields.io/github/v/release/olix3001/xalgs?color=red&label=Latest%20version%3A) ![shield](https://img.shields.io/github/commits-since/olix3001/xalgs/latest) ![shield](https://img.shields.io/maintenance/yes/2022) ![shield](https://img.shields.io/badge/Supported%20platforms%3A%20-Windows%20%7C%20MacOS%20%7C%20Linux%20%7C%20Ubuntu-informational) [![CI](https://github.com/olix3001/xalgs/actions/workflows/ci.yml/badge.svg)](https://github.com/olix3001/xalgs/actions/workflows/ci.yml)
 </br>
 
 ## Project Info
