@@ -25,6 +25,9 @@ jobs:
       - name: Start docker compose
         run: docker compose -f docker-compose.test.yaml up -d
         
+      - name: Check docker
+        run: docker compose -f docker-compose.test.yaml ps
+        
       - name: Wait for api to be online
         run: |
           npm install wait-on
